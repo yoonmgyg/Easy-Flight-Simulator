@@ -5,8 +5,12 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
+
+typedef high_resolution_clock Clock;
 
 //===== GRAPH ADJACENCY LIST IMPLEMENTATION =====//
 class Graph
@@ -78,17 +82,20 @@ void Graph::printGraph()
         {
             cout << " " << it->second.at(i).first;
         }
-        cout << "\n" << "\m" << "\n" << "\n";
+        cout << "\n" << "\n" << "\n" << "\n";
     }
 }
 
 int main()
 {
     Graph myGraph;
+    auto t1 = Clock::now();
 
     ifstream fin("Flight_Data.csv");
 
     string Airline, Flight_Number, Origin_Airport, Destination, Distance, temp;
+
+    cout << "Initializing Data..." << endl;
 
     getline(fin, temp, '\n'); // clearing the title string from csv
     while (fin.good())
@@ -102,9 +109,12 @@ int main()
         myGraph.insertEdge(Origin_Airport, Destination, stoi(Distance));
     }
 
+    auto t2 = Clock::now();
+    cout << "Sime Elapsed: " << duration_cast<nanoseconds>(t2 - t1).count()
+        << " nanoseconds" << endl;
 
     //===================== INSERT ANY VALUES YOU WANT TO TEST HERE ======================//
-    if (myGraph.isEdge("ANC", "SEA"))
+    if (myGraph.isEdge("ATL", "MSP"))
         cout << "YES!" << endl;
     else
         cout << "NO!" << endl;
