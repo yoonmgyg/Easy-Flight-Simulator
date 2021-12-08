@@ -114,9 +114,24 @@ int main()
         << " nanoseconds" << endl;
 
     //===================== INSERT ANY VALUES YOU WANT TO TEST HERE ======================//
-    if (myGraph.isEdge("ATL", "MSP"))
-        cout << "YES!" << endl;
-    else
-        cout << "NO!" << endl;
+    bool Continue = 1;
+    while (Continue == 1)
+    {
+        cout << "Enter the airport you wish to Depart (i.e. MCO - Orlando International" << endl;
+        string from;
+        cin >> from;
+        cout << "Enter the airport you wish to travel to: (i.e. DFW - Dallas Fort Worth International" << endl;
+        string to;
+        cin >> to;
+
+        if (myGraph.isEdge(from, to))
+            cout << "YES!" << endl;
+        else
+            cout << "NO!" << endl;
+        cout << "\n" << "Would you like to enter another trip?" << endl;
+        cout << "Enter 1 to continue" << endl;
+        cout << "Enter 0 to quit" << endl;
+        cin >> Continue;
+    }
     return 0;
 }
