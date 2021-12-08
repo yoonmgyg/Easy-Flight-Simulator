@@ -35,4 +35,4 @@ option(USE_SYSTEM_CURL "" ON)
 option(BUILD_CPR_TESTS "" OFF)
 add_subdirectory(cpr)
 
-add_subdirectory(geocoder)
+add_subdirectory(src)
