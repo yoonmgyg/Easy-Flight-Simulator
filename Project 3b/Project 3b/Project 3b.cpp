@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//===== GRAPH ADJACENCY LIST IMPLEMENTATION =====//
 class Graph
 {
 private:
@@ -21,6 +22,7 @@ public:
     void printGraph();
 };
 
+// insert an edge between origin and destination, including distance between
 void Graph::insertEdge(string from, string to, int weight)
 {
     graph[from].push_back(make_pair(to, weight));
@@ -31,6 +33,7 @@ void Graph::insertEdge(string from, string to, int weight)
     numVertices++;
 }
 
+// returns true if there is a flight from one airport to another
 bool Graph::isEdge(string from, string to)
 {
     for (int i = 0; i < graph[from].size(); i++)
@@ -41,6 +44,7 @@ bool Graph::isEdge(string from, string to)
     return false;
 }
 
+// returns the distance between two airports
 int Graph::getWeight(string from, string to)
 {
     for (int i = 0; i < graph[from].size(); i++)
@@ -51,6 +55,7 @@ int Graph::getWeight(string from, string to)
     return 0;
 }
 
+// returns a vector of all airports wich can be reach from an origin airport
 vector<string> Graph::getAdjacent(string vertex)
 {
     vector<string> adjacentVertices;
@@ -62,6 +67,7 @@ vector<string> Graph::getAdjacent(string vertex)
     return adjacentVertices;
 }
 
+// prints all adjacent vertices (in ascending order) for each airport
 void Graph::printGraph()
 {
     for (std::map<string, vector<pair<string, int>>>::iterator it = graph.begin(); it != graph.end(); ++it)
@@ -72,7 +78,7 @@ void Graph::printGraph()
         {
             cout << " " << it->second.at(i).first;
         }
-        cout << "\n";
+        cout << "\n" << "\m" << "\n" << "\n";
     }
 }
 
@@ -84,21 +90,23 @@ int main()
 
     string Airline, Flight_Number, Origin_Airport, Destination, Distance, temp;
 
-        getline(fin, temp, '\n');
-        while (fin.good())
-        {
-            getline(fin, Airline, ',');
-            getline(fin, Flight_Number, ',');
-            getline(fin, Origin_Airport, ',');
-            getline(fin, Destination, ',');
-            getline(fin, Distance, '\n');
+    getline(fin, temp, '\n'); // clearing the title string from csv
+    while (fin.good())
+    {
+        getline(fin, Airline, ',');
+        getline(fin, Flight_Number, ',');
+        getline(fin, Origin_Airport, ',');
+        getline(fin, Destination, ',');
+        getline(fin, Distance, '\n');
 
-            myGraph.insertEdge(Origin_Airport, Destination, stoi(Distance));
-        }
+        myGraph.insertEdge(Origin_Airport, Destination, stoi(Distance));
+    }
 
-        if (myGraph.isEdge("ANC", "SEA"))
-            cout << "YES!" << endl;
-        else
-            cout << "NO!" << endl;
-	return 0;
+
+    //===================== INSERT ANY VALUES YOU WANT TO TEST HERE ======================//
+    if (myGraph.isEdge("ANC", "SEA"))
+        cout << "YES!" << endl;
+    else
+        cout << "NO!" << endl;
+    return 0;
 }
