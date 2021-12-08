@@ -110,7 +110,7 @@ int main()
     }
 
     auto t2 = Clock::now();
-    cout << "Sime Elapsed: " << duration_cast<nanoseconds>(t2 - t1).count()
+    cout << "Time Elapsed: " << duration_cast<nanoseconds>(t2 - t1).count()
         << " nanoseconds" << endl;
 
     //===================== INSERT ANY VALUES YOU WANT TO TEST HERE ======================//
@@ -125,9 +125,9 @@ int main()
         cin >> to;
 
         if (myGraph.isEdge(from, to))
-            cout << "YES!" << endl;
+            cout << "There is a direct flight from " << from << " to " << to << endl;
         else
-            cout << "NO!" << endl;
+            cout << "There is no direct flight from " << from << " to " << to << endl;
         cout << "\n" << "Would you like to enter another trip?" << endl;
         cout << "Enter 1 to continue" << endl;
         cout << "Enter 0 to quit" << endl;
