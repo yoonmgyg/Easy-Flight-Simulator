@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libgeocoder.a CMakeFiles/geocoder.dir/geocoder.cpp.o
+/usr/bin/ranlib ../lib/libgeocoder.a
