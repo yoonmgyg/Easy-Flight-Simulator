@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <queue>
 #include <vector>
 #include <string>
 #include <chrono>
@@ -11,6 +12,7 @@ using namespace std;
 using namespace chrono;
 
 typedef high_resolution_clock Clock;
+#define INF 0x3f3f3f3f
 
 //===== GRAPH ADJACENCY LIST IMPLEMENTATION =====//
 class Graph
@@ -24,6 +26,10 @@ public:
     int getWeight(string from, string to);
     vector<string> getAdjacent(string vertex);
     void printGraph();
+
+    // graphs
+    bool genericBFS(string from, string to);
+    pair<vector<string>, int> detDijkstras(string from, string to);
 };
 
 // insert an edge between origin and destination, including distance between
@@ -86,6 +92,117 @@ void Graph::printGraph()
     }
 }
 
+bool Graph::genericBFS(string from, string to)
+{
+    
+    //bool *visited = new bool[graph.size()];
+    map<string, bool> visited;
+    for(auto itr = graph.begin(); itr != graph.end(); ++itr)
+    {
+        visited.emplace(itr->first, false);
+    }
+    queue<string> q;
+    unordered_map<string, string> predecessor;
+    // current node and then successor
+    predecessor.insert(make_pair(from, "NULL"));
+
+    visited.find(from)->second = true;
+    q.push(from);
+    int counter = 0;
+    while(!q.empty())
+    {
+        from = q.front();
+        q.pop();
+
+        if(from == to)
+        {
+            //cout << "successfully found" << endl;
+            return true;
+        }
+
+        vector<string> adjacents = getAdjacent(from);
+        for(int i = 0; i < adjacents.size(); i++)
+        {
+            predecessor.insert(make_pair(adjacents.at(i), from));
+            if(visited.find(adjacents.at(i))->second == false)
+            {
+                visited.find(adjacents.at(i))->second = true;
+                q.push(adjacents.at(i));
+            }
+        }
+        
+    }
+   return false;
+}
+
+//typedef pair<string, int> ports;
+pair<vector<string>, int> Graph::detDijkstras(string from, string to)
+{
+    priority_queue<pair<string, int>, vector<pair<string, int>>, greater<pair<string, int>>> pq;
+
+      unordered_map<string, pair<string, int>> dist;   
+
+    for(auto it = graph.begin(); it != graph.end(); ++it)
+    {
+        dist.insert(make_pair(it->first, make_pair("NULL", INF)));
+    }
+
+    pq.push(make_pair(from, 0));
+    dist.find(from)->second.second = 0;
+
+    while(!pq.empty())
+    {
+        string u = pq.top().first;
+        pq.pop();
+        auto it = graph.find(u);
+        for(int i = 0; i < it->second.size(); i++)
+        {
+            string v = it->second.at(i).first;
+            int weight = it->second.at(i).second;
+
+            if(dist.find(v)->second.second > dist.find(u)->second.second + weight)
+            {
+                dist.find(v)->second.second = dist.find(u)->second.second + weight;
+                  pq.push(make_pair(v, dist.find(v)->second.second));
+                  dist.find(v)->second.first = u;
+
+            }
+
+
+        }
+        
+    }
+
+   pair<vector<string>, int> data;
+   auto find = dist.find(to);
+   int counter = 0;
+   counter += find->second.second;
+   data.first.push_back(find->first);
+   while(find != dist.end())
+   {
+       if(find->second.first != "NULL")
+       {
+           find = dist.find(find->second.first);
+           data.first.push_back(find->first);
+           counter += find->second.second;
+       }
+       else
+       {
+           break;
+       }
+   }
+   // cout << "dist: " << counter << endl;
+    
+    data.second = counter;
+
+   for(int i = data.first.size() - 1; i >= 0; --i)
+   {
+       cout << data.first.at(i) << endl;
+   }
+
+   return data;
+}
+
 int main()
 {
     Graph myGraph;
@@ -117,10 +234,10 @@ int main()
     bool Continue = 1;
     while (Continue == 1)
     {
-        cout << "Enter the airport you wish to Depart (i.e. MCO - Orlando International" << endl;
+        cout << "Enter the airport you wish to Depart (i.e. MCO - Orlando International)" << endl;
         string from;
         cin >> from;
-        cout << "Enter the airport you wish to travel to: (i.e. DFW - Dallas Fort Worth International" << endl;
+        cout << "Enter the airport you wish to travel to: (i.e. DFW - Dallas Fort Worth International)" << endl;
         string to;
         cin >> to;
 
@@ -128,6 +245,23 @@ int main()
             cout << "There is a direct flight from " << from << " to " << to << endl;
         else
             cout << "There is no direct flight from " << from << " to " << to << endl;
+
+        if(myGraph.genericBFS(from, to) == false)
+        {
+            cout << "No such flight from " << from << " to " << to << " exists." << endl;
+        }
+        else
+        {
+            cout << "Such flight from " << from << " to " << to << " exists." << endl;
+            pair<vector<string>, int> data = myGraph.detDijkstras(from, to);
+            for(int i = data.first.size() - 1; i <= 0; i++)
+            {
+                cout << data.first.at(i) << endl; 
+            }
+            cout << "Distance from " << from << " to " << to << " is " << data.second << endl;
+        }
+            
+
         cout << "\n" << "Would you like to enter another trip?" << endl;
         cout << "Enter 1 to continue" << endl;
         cout << "Enter 0 to quit" << endl;
