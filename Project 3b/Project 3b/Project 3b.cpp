@@ -196,10 +196,10 @@ pair<vector<string>, int> Graph::detDijkstras(string from, string to)
     
     data.second = counter;
 
-   for(int i = data.first.size() - 1; i >= 0; --i)
+ /*  for(int i = data.first.size() - 1; i >= 0; --i)
    {
        cout << data.first.at(i) << endl;
-   }
+   }*/
 
    return data;
 }
@@ -242,11 +242,6 @@ int main()
         string to;
         cin >> to;
 
-        if (myGraph.isEdge(from, to))
-            cout << "There is a direct flight from " << from << " to " << to << endl;
-        else
-            cout << "There is no direct flight from " << from << " to " << to << endl;
-
         if(myGraph.genericBFS(from, to) == false)
         {
             cout << "No such flight from " << from << " to " << to << " exists." << endl;
@@ -255,11 +250,14 @@ int main()
         {
             cout << "Such flight from " << from << " to " << to << " exists." << endl;
             pair<vector<string>, int> data = myGraph.detDijkstras(from, to);
-            for(int i = data.first.size() - 1; i <= 0; i++)
+            for(int i = data.first.size() - 1; i >= 0; i--)
             {
-                cout << data.first.at(i) << endl; 
+                if (i == 0)
+                    cout << data.first.at(i) << endl;
+                else
+                    cout << data.first.at(i) << " -> ";
             }
-            cout << "Distance from " << from << " to " << to << " is " << data.second << endl;
+            cout << "Distance from " << from << " to " << to << " is " << data.second << " miles!" << endl;
         }
             
 
