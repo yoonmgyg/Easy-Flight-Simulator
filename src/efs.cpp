@@ -8,8 +8,42 @@
 #include <memory>
 
 #include "geocoder.h"
+#include <matplot/matplot.h>
 
 using namespace std;
+
+class City
+{
+private:
+  double latitude;
+  double longitude;
+  string name;
+public:
+  City(string geocode);
+  double getLat();
+  double getLng();
+  string getNam();  
+};
+
+City::City(string geocode, string name) {
+  this->latitude = stod(geocode.substr(geocode.find("lat") + 5, geocode.find("lat") + 9));
+  cout << this->latitude << endl;
+  this->longitude = stod(geocode.substr(geocode.find("lng") + 5, geocode.find("lng") + 9));
+  cout << this->longitude << endl;
+  this->name = name;
+}
+
+double City::getLat() {
+  return this->latitude;
+}
+
+double City::getLng() {
+  return this->longitude;
+}
+
+string City::getNam() {
+  return this->name;
+}
 
 class Graph
 {
@@ -103,7 +137,21 @@ int main()
     cout << "YES!" << endl;
   else
     cout << "NO!" << endl;
+
+  
   unique_ptr<Geocoder>g(new Geocoder("a131785eb02d42349e3a14ba0dc5b471"));
-  cout << g->geocode("MCO") << endl;
+  string geocode =  g->geocode("MCO");
+  City* orlando = new City(geocode);
+  string geocodeTwo = g->geocode("JFK");
+  City* nyc = new City(geocodeTwo);
+  
+  matplot::geoplot(std::vector{orlando->getLat(), nyc->getLat()},
+		   std::vector{orlando->getLng(), nyc->getLng()}, "g-*");
+  matplot::geolimits({25, 50},
+		     {-130, -65});
+  matplot::text(nyc->getLng(), nyc->getLat(), nyc->getNam());
+  matplot::text(orlando->getLng(), orlando->getLat(), orlando->getNam());
+  matplot::show();
+  
   return 0;
 }

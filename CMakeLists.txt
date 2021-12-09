@@ -36,3 +36,5 @@ option(BUILD_CPR_TESTS "" OFF)
 add_subdirectory(cpr)
 
 add_subdirectory(src)
+
+add_subdirectory(matplotplusplus)
